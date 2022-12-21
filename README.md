@@ -50,9 +50,11 @@ If you run into any problems, you can clone the repository and compile it on you
  
  #### Make package reference list:
 Now open the command line at project directory, and type:
-`go mod tidy`
+
+    go mod init xwamp
+    go mod tidy
     
-This command will find all the packages used in project and create  `go.mod` file, that defines the references for all required packages.
+First command will create  `go.mod` file (that defines the references for all required packages), the next one will find all the needed packages and put them into this list.
 
 If you want, you can upgrade dependencies to the latest packages, using standard: `go get -u all` command, or recursive way: `go get -u ./...`.  This will regenerate the `go.mod` file and now it will include latest available versions of the packages. 
 
