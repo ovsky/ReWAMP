@@ -43,7 +43,7 @@ At first, replace every: `github.com/romualdr/systray` in project, by: `github.c
 In `main.go` you need to fix the reference of the local `icon` package, by replacing deprecated includement: `"./icon"` by the modern way `"xwamp/icon"`. The `xwamp` here is defined by the name of your module, you can find and change it in `go.mod` file. 
 
 Now, include the precompiled [2goarray](https://github.com/cratonica/2goarray) package binary in Golang default directory (`%gopath%/bin`). 
-The simplest way to do it is invocation installation from source by command line:
+The simplest way to do it is installation from source by command line:
 `go install github.com/cratonica/2goarray@latest`
 
 If you run into any problems, you can clone the repository and compile it on your own and then copy the `2goarray.exe` binary to the directory metioned above.
@@ -56,7 +56,9 @@ Now open the command line at project directory, and type:
     
 First command will create  `go.mod` file (that defines the references for all required packages), the next one will find all the needed packages and put them into this list.
 
-If you want, you can upgrade dependencies to the latest packages, using standard: `go get -u all` command, or recursive way: `go get -u ./...`.  This will regenerate the `go.mod` file and now it will include latest available versions of the packages. 
+If you want, you can upgrade dependencies to the latest packages, using standard: `go get -u all` command, or recursive way: `go get -u ./...`.  This will update the `go.mod` file and now it will include latest available versions of the packages. 
+
+Now you can build the project using `build.bat` file, or by raw command: `go build -ldflags="-H windowsgui"`. It will pack the project into `xwamp.exe` binary. 
 
  #### Installing packages:
 To install all required packages, you can simply invoke the global command: `go install` - that will install the packages defined in `go.mod` globally or in-repository command: `go get`, that will put these packages especially into your current project. 
@@ -66,7 +68,6 @@ If, by some reason, you want to install the packages that are necessary for XWAM
     go get golang.org/x/sys/windows
     go get github.com/lxn/win
     go get github.com/mitchellh/go-ps
-    go get github.com/romualdr/systray
     go get github.com/getlantern/systray
     go get github.com/sqweek/dialog
     
