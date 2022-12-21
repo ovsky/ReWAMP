@@ -2,7 +2,7 @@ package main
 
 import (
 	"./icon"
-	"github.com/romualdr/systray"
+	"github.com/getlantern/systray"
 	"sync"
 )
 
