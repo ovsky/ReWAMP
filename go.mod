@@ -1,4 +1,4 @@
-module xwamp
+module rewamp
 
 go 1.19
 
