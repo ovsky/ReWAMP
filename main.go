@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./icon"
+	"xwamp/icon"
 	"github.com/getlantern/systray"
 	"sync"
 )
