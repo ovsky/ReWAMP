@@ -1,6 +1,6 @@
-# Contributing to REWAMP
+# Contributing to ReWAMP
 
-Thank you for your interest in contributing to REWAMP! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to ReWAMP! This document provides guidelines and information for contributors.
 
 ## Code of Conduct
 
@@ -19,12 +19,12 @@ By participating in this project, you agree to maintain a respectful and inclusi
 1. Fork the repository on GitHub
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/yourusername/REWAMP.git
-   cd REWAMP
+   git clone https://github.com/yourusername/ReWAMP.git
+   cd ReWAMP
    ```
 3. Add the original repository as upstream:
    ```bash
-   git remote add upstream https://github.com/ovsky/REWAMP.git
+   git remote add upstream https://github.com/ovsky/ReWAMP.git
    ```
 1. Install dependencies:
    ```bash
@@ -106,7 +106,7 @@ feat: add version information to system tray menu
 ### Project Structure
 
 ```
-REWAMP/
+ReWAMP/
 ├── main.go           # Main application logic
 ├── windows.go        # Windows-specific functionality
 ├── main_test.go      # Tests
@@ -166,12 +166,12 @@ Releases are managed by maintainers and follow semantic versioning:
 ## Getting Help
 
 - Check the [README.md](README.md) for basic information
-- Look through existing [issues](https://github.com/ovsky/REWAMP/issues)
+- Look through existing [issues](https://github.com/ovsky/ReWAMP/issues)
 - Create a new issue for questions or problems
 
 ## License
 
-By contributing to REWAMP, you agree that your contributions will be licensed under the MIT License.
+By contributing to ReWAMP, you agree that your contributions will be licensed under the MIT License.
 
 ## Recognition
 
@@ -180,4 +180,4 @@ Contributors are recognized in:
 - Release notes for significant contributions
 - Potential mention in README.md
 
-Thank you for contributing to REWAMP!
+Thank you for contributing to ReWAMP!

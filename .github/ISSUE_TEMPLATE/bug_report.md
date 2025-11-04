@@ -26,7 +26,7 @@ If applicable, add screenshots to help explain your problem.
 
 ## Environment Information
 - OS: [e.g. Windows 10, Windows 11]
-- REWAMP Version: [e.g. 1.0.0]
+- ReWAMP Version: [e.g. 1.0.0]
 - Go Version (if building from source): [e.g. 1.24.0]
 
 ## Additional Context

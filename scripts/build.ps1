@@ -1,4 +1,4 @@
-# REWAMP Build Script
+# ReWAMP Build Script
 # Modern PowerShell build script with error handling and features
 
 param(
@@ -31,7 +31,7 @@ if ($Version -eq "dev") {
     $Version = "dev-$GitHash"
 }
 
-Write-Info "Building REWAMP $Version"
+Write-Info "Building ReWAMP $Version"
 
 # Clean previous builds
 if ($Clean -or $All) {
@@ -86,29 +86,29 @@ try {
         # Windows AMD64
         $env:GOOS = "windows"
         $env:GOARCH = "amd64"
-        go build -ldflags="$LdFlags" -o "dist/rewamp-windows-amd64.exe" .
+        go build -ldflags="$LdFlags" -o "dist/rewamp-windows-amd64.exe" ../cmd/rewamp
         Write-Success "Built Windows AMD64 version"
 
         # Windows 386
         $env:GOARCH = "386"
-        go build -ldflags="$LdFlags" -o "dist/rewamp-windows-386.exe" .
+        go build -ldflags="$LdFlags" -o "dist/rewamp-windows-386.exe" ../cmd/rewamp
         Write-Success "Built Windows 386 version"
 
         # Copy additional files
-        Copy-Item "README.md" "dist/"
-        Copy-Item "LICENSE" "dist/"
+        Copy-Item "../README.md" "dist/"
+        Copy-Item "../LICENSE" "dist/"
 
         Write-Success "Release build completed in dist/ directory"
     }
     else {
         # Regular build
-        go build -ldflags="$LdFlags" -o "rewamp.exe" .
+        go build -ldflags="$LdFlags" -o "../rewamp.exe" ../cmd/rewamp
         Write-Success "Build completed: rewamp.exe"
     }
 
     # Show file size
-    if (Test-Path "rewamp.exe") {
-        $Size = (Get-Item "rewamp.exe").Length
+    if (Test-Path "../rewamp.exe") {
+        $Size = (Get-Item "../rewamp.exe").Length
         $SizeKB = [math]::Round($Size / 1KB, 2)
         Write-Info "Binary size: $SizeKB KB"
     }

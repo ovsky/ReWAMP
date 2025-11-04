@@ -1,10 +1,10 @@
 @ECHO OFF
 SETLOCAL EnableDelayedExpansion
 
-REM REWAMP Build Script
+REM ReWAMP Build Script
 REM Modern batch build script with error handling
 
-ECHO [INFO] Building REWAMP...
+ECHO [INFO] Building ReWAMP...
 
 REM Check if Go is installed
 go version >nul 2>&1
@@ -30,7 +30,7 @@ SET LDFLAGS=-ldflags="-H windowsgui -s -w -X main.version=%VERSION% -X main.buil
 
 REM Build the application
 ECHO [INFO] Compiling...
-go build %LDFLAGS% -o rewamp.exe .
+go build %LDFLAGS% -o ..\rewamp.exe ..\cmd\rewamp
 
 IF ERRORLEVEL 1 (
     ECHO [ERROR] Build failed
@@ -39,10 +39,9 @@ IF ERRORLEVEL 1 (
 )
 
 REM Get file size
-FOR %%F IN (rewamp.exe) DO (
+FOR %%F IN (..\rewamp.exe) DO (
     SET /A SIZE=%%~zF/1024
     ECHO [SUCCESS] Build completed: rewamp.exe ^(!SIZE! KB^)
 )
 
 ECHO [INFO] Build process completed successfully!
-PAUSE

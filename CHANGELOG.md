@@ -24,8 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated build constraints from `+build` to `//go:build`
 - Improved .gitignore with modern Go project patterns
 - Enhanced README with modern features and build instructions
-- Updated application name from XWAMP to REWAMP
+- Updated application name from XWAMP to ReWAMP
 - Modernized code structure and organization
+- Bumped baseline toolchain to Go 1.24 and refreshed module dependencies
 
 ### Deprecated
 - Old build.bat script (replaced with enhanced version)

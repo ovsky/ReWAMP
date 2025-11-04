@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We actively support the following versions of REWAMP:
+We actively support the following versions of ReWAMP:
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,7 +11,7 @@ We actively support the following versions of REWAMP:
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in REWAMP, please report it responsibly:
+If you discover a security vulnerability in ReWAMP, please report it responsibly:
 
 ### Preferred Method
 - Create a private security advisory on GitHub
@@ -41,7 +41,7 @@ Please provide the following information:
 
 ### Security Considerations
 
-REWAMP operates with elevated privileges on Windows systems to:
+ReWAMP operates with elevated privileges on Windows systems to:
 - Create virtual drives
 - Manage system processes
 - Modify system PATH environment variable
@@ -62,7 +62,7 @@ We regularly update dependencies to address security vulnerabilities:
 
 ### Safe Usage Guidelines
 
-To use REWAMP safely:
+To use ReWAMP safely:
 - Download only from official sources (GitHub releases)
 - Verify file checksums when available
 - Run with standard user privileges when possible
@@ -72,7 +72,7 @@ To use REWAMP safely:
 ### Scope
 
 This security policy covers:
-- The REWAMP application code
+- The ReWAMP application code
 - Build and release processes
 - Dependencies and third-party components
 - Documentation and examples
@@ -82,4 +82,4 @@ This policy does not cover:
 - User-generated content or configurations
 - Issues in external services or tools
 
-Thank you for helping keep REWAMP secure!
+Thank you for helping keep ReWAMP secure!

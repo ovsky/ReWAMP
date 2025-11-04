@@ -61,7 +61,7 @@ jobs:
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
-        run: go build ${{ matrix.build-flags }} -o ${{ matrix.binary }} .
+        run: go build ${{ matrix.build-flags }} -o ${{ matrix.binary }} ./cmd/rewamp
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3

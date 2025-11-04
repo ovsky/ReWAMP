@@ -48,6 +48,15 @@ pids
 
 # Application specific
 /vdrive/
+/build/
+/dist/
+
+# Compiled binaries
+rewamp
+rewamp.exe
+rewamp-*
 /dist/
 /build/
 /release/
+rewamp.exe
+rewamp-*.exe
