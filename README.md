@@ -177,6 +177,31 @@ make clean
    go run ./cmd/rewamp
    ```
 
+### 🧪 Testing
+
+ReWAMP includes comprehensive tests that run automatically in CI/CD:
+
+```bash
+# Run all tests
+go test ./...
+
+# Run tests with coverage
+go test -v -coverprofile=coverage.out ./...
+
+# Run code quality checks
+go vet ./...
+```
+
+**Test Coverage:**
+- Service structure validation
+- Configuration structure validation
+- Log structure validation
+- Tools structure validation
+- Documentation structure validation
+- Version information validation
+
+All tests pass on all 5 platforms before builds are released!
+
 ## How It Works
 
 ReWAMP creates an isolated environment for all your web development tools:
@@ -213,7 +238,38 @@ This approach provides:
 - Text editor: Uses $EDITOR environment variable or falls back to nano/vim/vi
 - File browser: Uses xdg-open or falls back to common browsers
 
-**📖 For detailed Linux setup instructions, see [docs/LINUX.md](docs/LINUX.md)**
+### 🐧 Linux Quick Reference
+
+**Installation:**
+```bash
+# Download and make executable
+chmod +x rewamp-linux-amd64
+sudo mv rewamp-linux-amd64 /usr/local/bin/rewamp
+
+# Run from anywhere
+rewamp
+```
+
+**Configuration Location:** `~/.config/rewamp/config.json`
+
+**Symlink Path:** `/tmp/rewamp-{uid}` (points to your vdrive directory)
+
+**Desktop Environments Supported:**
+- ✅ GNOME (requires AppIndicator extension)
+- ✅ KDE Plasma
+- ✅ XFCE
+- ✅ MATE, Cinnamon, and others with system tray
+
+**Text Editor:** Respects `$EDITOR` environment variable (falls back to nano/vim/vi)
+
+**File Browser:** Uses `xdg-open` (install `xdg-utils` if needed)
+
+**Troubleshooting:**
+- System tray not showing? Install AppIndicator support for your DE
+- Service won't start? Check if executables exist in vdrive/.sys/
+- Can't open URLs? Install `xdg-utils` package
+
+**📖 For complete Linux guide with service setup, see [docs/LINUX.md](docs/LINUX.md)**
 
 ## Continuous Integration & Deployment
 
@@ -314,16 +370,119 @@ REWAMP/
 
 **📖 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed architecture**
 
+## Common Tasks
+
+Quick reference for common development and build tasks:
+
+### Building
+
+```bash
+# Development build (current OS)
+go build -o rewamp ./cmd/rewamp
+
+# Windows builds (all architectures)
+make build-windows
+
+# Linux builds (all architectures)
+make build-linux
+
+# Build all platforms
+make build-all
+```
+
+### Running
+
+```bash
+# Run without building
+go run ./cmd/rewamp
+
+# Run with verbose logging
+./rewamp -v
+
+# Windows: Check virtual drive
+# Linux: Check /tmp/rewamp-$(id -u)
+```
+
+### Testing
+
+```bash
+# Run all tests
+go test ./...
+
+# Run with coverage
+go test -cover ./...
+
+# Run specific test
+go test -run TestPathSep ./cmd/rewamp
+```
+
+### Deploying
+
+```bash
+# Push to GitHub (triggers CI/CD for all platforms)
+git push
+
+# Download artifacts from GitHub Actions → Workflow → Latest run
+# Or from Releases page (after creating release tag)
+```
+
+**📖 See [docs/BUILDING_LINUX_FROM_WINDOWS.md](docs/BUILDING_LINUX_FROM_WINDOWS.md) for cross-compilation details**
+**📖 See [docs/CI_CD_ARCHITECTURE.md](docs/CI_CD_ARCHITECTURE.md) for automation details**
+
 ## Documentation
 
-Comprehensive documentation is available in the `docs/` directory:
+Comprehensive documentation is available in the [`docs/`](docs/) directory:
 
-- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Project structure and design
-- **[LINUX.md](docs/LINUX.md)** - Complete Linux installation guide
-- **[CI_CD_ARCHITECTURE.md](docs/CI_CD_ARCHITECTURE.md)** - GitHub Actions setup
-- **[ARTIFACTS_GUIDE.md](docs/ARTIFACTS_GUIDE.md)** - Download and use artifacts
-- **[BUILDING_LINUX_FROM_WINDOWS.md](docs/BUILDING_LINUX_FROM_WINDOWS.md)** - Cross-compilation guide
+### 📖 User Guides
+
+- **[ARTIFACTS_GUIDE.md](docs/ARTIFACTS_GUIDE.md)** - Quick reference for downloading binaries
+  - How to download from GitHub Actions
+  - How to download from Releases
+  - Which binary to use for your platform
+  - Artifact retention information
+
+- **[LINUX.md](docs/LINUX.md)** - Complete Linux installation and setup guide (260+ lines)
+  - System requirements and dependencies
+  - Installation methods (pre-built binary and from source)
+  - Service setup (system-wide or portable)
+  - Configuration files and troubleshooting
+  - Desktop environment specific notes (GNOME, KDE, XFCE)
+  - Differences from Windows
+
+### 🏗️ Developer Documentation
+
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Project structure and modern Go layout
+  - Directory structure explanation
+  - Build tag usage for platform separation
+  - Testing and build commands
+  - Migration history and design decisions
+
 - **[LINUX_SUPPORT_SUMMARY.md](docs/LINUX_SUPPORT_SUMMARY.md)** - Technical implementation details
+  - Complete changelog of Linux support additions
+  - Virtual environment approach (Windows vs Linux)
+  - Configuration storage mechanisms
+  - Process management differences
+  - Path handling strategies
+
+### 🔧 Build & CI/CD Documentation
+
+- **[CI_CD_ARCHITECTURE.md](docs/CI_CD_ARCHITECTURE.md)** - GitHub Actions CI/CD pipeline
+  - Build matrix configuration (5 platforms)
+  - Workflow triggers and steps
+  - Artifact storage and retention
+  - Release automation process
+  - Build performance metrics
+  - Troubleshooting guide
+
+- **[BUILDING_LINUX_FROM_WINDOWS.md](docs/BUILDING_LINUX_FROM_WINDOWS.md)** - Cross-compilation guide
+  - Why cross-compilation is challenging (CGO dependencies)
+  - Using GitHub Actions (recommended approach)
+  - Alternative methods (WSL, Docker, Linux VM)
+  - Build status and workflow
+
+### 📂 Complete Documentation Index
+
+Visit [docs/README.md](docs/README.md) for the full documentation index and navigation.
 
 ## Contributing
 
