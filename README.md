@@ -15,22 +15,62 @@ Heavily inspired by the now defunct ZWAMP and modernized for 2025.
 
 ![screenshot](./screenshot.png)
 
+## Quick Start
+
+1. **Download** the binary for your platform from [Releases](https://github.com/ovsky/ReWAMP/releases)
+2. **Run** the executable - it appears in your system tray
+3. **Start services** from the tray menu
+4. **Access** your local web server at `http://localhost`
+
+That's it! No installation, no configuration needed.
+
 ## Features
 
 - ✅ **Zero Configuration**: Works out of the box
 - ✅ **Cross-Platform**: Full support for Windows and Linux
 - ✅ **Multiple Architectures**: AMD64, ARM64, and x86 (32-bit)
+- ✅ **Automated Builds**: GitHub Actions CI/CD with artifact uploads
 - ✅ **System Tray Integration**: Convenient system tray menu
 - ✅ **Multiple Services**: Apache, MySQL, PHP, MongoDB, Memcached
 - ✅ **Quick Access**: Direct links to admin tools and documentation
 - ✅ **Isolated Environment**: Virtual drives (Windows) or symlinks (Linux)
 - ✅ **Modern Go**: Built with Go 1.24+ and modern dependencies
 
+## Supported Platforms
+
+ReWAMP is automatically built for **5 platform/architecture combinations**:
+
+| Platform | Architecture | Binary Name | Use Case |
+|----------|-------------|-------------|----------|
+| 🪟 Windows | AMD64 (64-bit) | `rewamp-windows-amd64.exe` | Modern Windows PCs |
+| 🪟 Windows | 386 (32-bit) | `rewamp-windows-386.exe` | Legacy Windows systems |
+| 🪟 Windows | ARM64 | `rewamp-windows-arm64.exe` | Surface Pro X, Windows on ARM |
+| 🐧 Linux | AMD64 (64-bit) | `rewamp-linux-amd64` | Standard Linux servers/desktops |
+| 🐧 Linux | ARM64 | `rewamp-linux-arm64` | Raspberry Pi 4+, ARM servers |
+
+All binaries are automatically built and tested via GitHub Actions CI/CD on every commit.
+
 ## Getting Started
 
 ### Download Pre-built Binary
 
-Download the latest release from the [Releases page](https://github.com/ovsky/ReWAMP/releases).
+**Option 1: From Releases** (Recommended)
+
+Download the latest release from the [Releases page](https://github.com/ovsky/ReWAMP/releases) and choose the binary for your platform.
+
+**Option 2: From GitHub Actions Artifacts**
+
+1. Go to [Actions tab](https://github.com/ovsky/ReWAMP/actions)
+2. Click on the latest successful workflow run
+3. Scroll to "Artifacts" section
+4. Download the artifact for your platform
+5. Extract the ZIP file to get the binary
+
+**Which binary should I use?**
+- **Windows users**: Most likely `rewamp-windows-amd64.exe`
+- **Linux users**: Most likely `rewamp-linux-amd64`
+- **Raspberry Pi 4+**: Use `rewamp-linux-arm64`
+- **Surface Pro X**: Use `rewamp-windows-arm64.exe`
 
 ### Building from Source
 
@@ -175,6 +215,48 @@ This approach provides:
 
 **📖 For detailed Linux setup instructions, see [docs/LINUX.md](docs/LINUX.md)**
 
+## Continuous Integration & Deployment
+
+ReWAMP uses **GitHub Actions** for automated builds and releases:
+
+### 🔄 Automated Builds
+
+Every push to `main` and every pull request triggers:
+- ✅ **5 parallel builds** (all platforms/architectures)
+- ✅ **Automated testing** (`go test -v ./...`)
+- ✅ **Code quality checks** (`go vet ./...`)
+- ✅ **Artifact uploads** (binaries stored for 90 days)
+
+**Build time:** ~3-4 minutes for all 5 architectures (parallel execution)
+
+### 📦 Artifact Downloads
+
+**From Actions tab:**
+1. Visit [Actions](https://github.com/ovsky/ReWAMP/actions)
+2. Click latest successful workflow
+3. Download from "Artifacts" section at bottom
+
+**From Releases:**
+1. Visit [Releases](https://github.com/ovsky/ReWAMP/releases)
+2. Download binary for your platform directly
+
+### 🏷️ Release Process
+
+When a version tag is pushed (e.g., `v1.0.0`):
+```bash
+git tag -a v1.0.0 -m "Release version 1.0.0"
+git push origin v1.0.0
+```
+
+GitHub Actions automatically:
+1. Builds all 5 architectures
+2. Runs all tests
+3. Creates GitHub Release
+4. Attaches all binaries
+5. Generates release notes
+
+**📚 Detailed CI/CD documentation:** [docs/CI_CD_ARCHITECTURE.md](docs/CI_CD_ARCHITECTURE.md)
+
 ## Included Tools and Versions
 
 ### Core Services
@@ -207,13 +289,55 @@ This project uses the following Go modules:
 - [github.com/sqweek/dialog](https://github.com/sqweek/dialog) - Native dialogs
 - [golang.org/x/sys](https://golang.org/x/sys) - System calls
 
+## Project Structure
+
+ReWAMP follows the [Standard Go Project Layout](https://github.com/golang-standards/project-layout):
+
+```
+REWAMP/
+├── .github/workflows/    # CI/CD automation
+├── assets/icons/         # Application icons
+├── cmd/rewamp/          # Main application
+│   ├── main.go          # Cross-platform core
+│   ├── windows.go       # Windows-specific (virtual drives, registry)
+│   └── linux.go         # Linux-specific (symlinks, JSON config)
+├── docs/                # Comprehensive documentation
+├── scripts/             # Build scripts (bash, PowerShell, batch)
+├── vdrive/              # Virtual drive content (gitignored)
+└── Makefile             # Build automation
+```
+
+**Key files:**
+- Build tags separate platform-specific code (`//go:build windows`, `//go:build linux`)
+- Runtime OS detection for cross-platform logic
+- Shared service definitions with platform-aware paths
+
+**📖 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed architecture**
+
+## Documentation
+
+Comprehensive documentation is available in the `docs/` directory:
+
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Project structure and design
+- **[LINUX.md](docs/LINUX.md)** - Complete Linux installation guide
+- **[CI_CD_ARCHITECTURE.md](docs/CI_CD_ARCHITECTURE.md)** - GitHub Actions setup
+- **[ARTIFACTS_GUIDE.md](docs/ARTIFACTS_GUIDE.md)** - Download and use artifacts
+- **[BUILDING_LINUX_FROM_WINDOWS.md](docs/BUILDING_LINUX_FROM_WINDOWS.md)** - Cross-compilation guide
+- **[LINUX_SUPPORT_SUMMARY.md](docs/LINUX_SUPPORT_SUMMARY.md)** - Technical implementation details
+
 ## Contributing
+
+We welcome contributions! Here's how:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+**All pull requests trigger automated builds and tests for all 5 platforms!**
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## License
 

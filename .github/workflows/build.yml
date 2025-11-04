@@ -12,29 +12,56 @@ jobs:
     strategy:
       matrix:
         include:
+          # Windows AMD64 (64-bit Intel/AMD)
           - os: windows-latest
             goos: windows
             goarch: amd64
             artifact: rewamp-windows-amd64
-            binary: rewamp-amd64.exe
+            binary: rewamp-windows-amd64.exe
             build-flags: -ldflags="-H windowsgui -s -w"
             cache-path: |
               ~\AppData\Local\go-build
               ~\go\pkg\mod
+
+          # Windows 386 (32-bit Intel/AMD)
+          - os: windows-latest
+            goos: windows
+            goarch: "386"
+            artifact: rewamp-windows-386
+            binary: rewamp-windows-386.exe
+            build-flags: -ldflags="-H windowsgui -s -w"
+            cache-path: |
+              ~\AppData\Local\go-build
+              ~\go\pkg\mod
+
+          # Windows ARM64 (Surface Pro X, Windows on ARM)
           - os: windows-latest
             goos: windows
             goarch: arm64
             artifact: rewamp-windows-arm64
-            binary: rewamp-arm64.exe
+            binary: rewamp-windows-arm64.exe
             build-flags: -ldflags="-H windowsgui -s -w"
             cache-path: |
               ~\AppData\Local\go-build
               ~\go\pkg\mod
+
+          # Linux AMD64 (64-bit Intel/AMD)
           - os: ubuntu-latest
             goos: linux
             goarch: amd64
             artifact: rewamp-linux-amd64
-            binary: rewamp
+            binary: rewamp-linux-amd64
+            build-flags: -ldflags="-s -w"
+            cache-path: |
+              ~/.cache/go-build
+              ~/go/pkg/mod
+
+          # Linux ARM64 (Raspberry Pi 4+, ARM servers)
+          - os: ubuntu-latest
+            goos: linux
+            goarch: arm64
+            artifact: rewamp-linux-arm64
+            binary: rewamp-linux-arm64
             build-flags: -ldflags="-s -w"
             cache-path: |
               ~/.cache/go-build
@@ -96,9 +123,11 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            artifacts/rewamp-windows-amd64/rewamp-amd64.exe
-            artifacts/rewamp-windows-arm64/rewamp-arm64.exe
-            artifacts/rewamp-linux-amd64/rewamp
+            artifacts/rewamp-windows-amd64/rewamp-windows-amd64.exe
+            artifacts/rewamp-windows-386/rewamp-windows-386.exe
+            artifacts/rewamp-windows-arm64/rewamp-windows-arm64.exe
+            artifacts/rewamp-linux-amd64/rewamp-linux-amd64
+            artifacts/rewamp-linux-arm64/rewamp-linux-arm64
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
