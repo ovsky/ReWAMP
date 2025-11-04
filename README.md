@@ -19,6 +19,7 @@ Heavily inspired by the now defunct ZWAMP and modernized for 2025.
 
 - ✅ **Zero Configuration**: Works out of the box
 - ✅ **Cross-Platform**: Full support for Windows and Linux
+- ✅ **Multiple Architectures**: AMD64, ARM64, and x86 (32-bit)
 - ✅ **System Tray Integration**: Convenient system tray menu
 - ✅ **Multiple Services**: Apache, MySQL, PHP, MongoDB, Memcached
 - ✅ **Quick Access**: Direct links to admin tools and documentation

@@ -38,10 +38,10 @@ You need to have the following services installed on your system:
    # Ubuntu/Debian
    sudo apt update
    sudo apt install golang-go
-   
+
    # Fedora
    sudo dnf install golang
-   
+
    # Arch Linux
    sudo pacman -S go
    ```

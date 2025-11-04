@@ -94,6 +94,11 @@ try {
         go build -ldflags="$LdFlags" -o "dist/rewamp-windows-386.exe" ../cmd/rewamp
         Write-Success "Built Windows 386 version"
 
+        # Windows ARM64
+        $env:GOARCH = "arm64"
+        go build -ldflags="$LdFlags" -o "dist/rewamp-windows-arm64.exe" ../cmd/rewamp
+        Write-Success "Built Windows ARM64 version"
+
         # Copy additional files
         Copy-Item "../README.md" "dist/"
         Copy-Item "../LICENSE" "dist/"

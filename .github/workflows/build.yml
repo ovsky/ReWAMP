@@ -16,7 +16,16 @@ jobs:
             goos: windows
             goarch: amd64
             artifact: rewamp-windows-amd64
-            binary: rewamp.exe
+            binary: rewamp-amd64.exe
+            build-flags: -ldflags="-H windowsgui -s -w"
+            cache-path: |
+              ~\AppData\Local\go-build
+              ~\go\pkg\mod
+          - os: windows-latest
+            goos: windows
+            goarch: arm64
+            artifact: rewamp-windows-arm64
+            binary: rewamp-arm64.exe
             build-flags: -ldflags="-H windowsgui -s -w"
             cache-path: |
               ~\AppData\Local\go-build
@@ -87,7 +96,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            artifacts/rewamp-windows-amd64/rewamp.exe
+            artifacts/rewamp-windows-amd64/rewamp-amd64.exe
+            artifacts/rewamp-windows-arm64/rewamp-arm64.exe
             artifacts/rewamp-linux-amd64/rewamp
           generate_release_notes: true
         env:
