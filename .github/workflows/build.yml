@@ -77,7 +77,7 @@ jobs:
           check-latest: true
 
       - name: Cache Go modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ matrix.cache-path }}
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
@@ -100,7 +100,7 @@ jobs:
         run: go build ${{ matrix.build-flags }} -o ${{ matrix.binary }} ./cmd/rewamp
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
           path: ${{ matrix.binary }}
@@ -112,7 +112,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 
