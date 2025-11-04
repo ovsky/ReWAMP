@@ -1,5 +1,5 @@
 
-# ![logo](./icon/icon_small.png) ReWAMP
+# ![logo](./assets/icons/icon_small.png) ReWAMP
 
 > Modern Cross-Platform Web Development Stack built with Go.
 
@@ -13,7 +13,7 @@ The goal of ReWAMP is to provide a simple executable to run web development tool
 
 Heavily inspired by the now defunct ZWAMP and modernized for 2025.
 
-![screenshot](./screenshot.png)
+![screenshot](./assets/screenshot.png)
 
 ## Quick Start
 
