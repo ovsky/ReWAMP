@@ -6,6 +6,31 @@ on:
     tags: ["v*"]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      build_platforms:
+        description: "Select platforms to build"
+        required: false
+        default: "all"
+        type: choice
+        options:
+          - all
+          - windows-only
+          - linux-only
+      skip_tests:
+        description: "Skip running tests"
+        required: false
+        default: false
+        type: boolean
+      run_release:
+        description: "Also create a GitHub Release from this run"
+        required: false
+        default: false
+        type: boolean
+      release_tag:
+        description: "Tag to use when creating a manual release (e.g., v1.2.3)"
+        required: false
+        type: string
 
 jobs:
   build:
@@ -19,6 +44,7 @@ jobs:
             artifact: rewamp-windows-amd64
             binary: rewamp-windows-amd64.exe
             build-flags: -ldflags="-H windowsgui -s -w"
+            platform: windows
             cache-path: |
               ~\AppData\Local\go-build
               ~\go\pkg\mod
@@ -30,6 +56,7 @@ jobs:
             artifact: rewamp-windows-386
             binary: rewamp-windows-386.exe
             build-flags: -ldflags="-H windowsgui -s -w"
+            platform: windows
             cache-path: |
               ~\AppData\Local\go-build
               ~\go\pkg\mod
@@ -41,6 +68,7 @@ jobs:
             artifact: rewamp-windows-arm64
             binary: rewamp-windows-arm64.exe
             build-flags: -ldflags="-H windowsgui -s -w"
+            platform: windows
             cache-path: |
               ~\AppData\Local\go-build
               ~\go\pkg\mod
@@ -52,6 +80,7 @@ jobs:
             artifact: rewamp-linux-amd64
             binary: rewamp-linux-amd64
             build-flags: -ldflags="-s -w"
+            platform: linux
             cache-path: |
               ~/.cache/go-build
               ~/go/pkg/mod
@@ -63,10 +92,16 @@ jobs:
             artifact: rewamp-linux-arm64
             binary: rewamp-linux-arm64
             build-flags: -ldflags="-s -w"
+            platform: linux
             cache-path: |
               ~/.cache/go-build
               ~/go/pkg/mod
     runs-on: ${{ matrix.os }}
+    if: >-
+      ${{ github.event_name != 'workflow_dispatch' ||
+          github.event.inputs.build_platforms == 'all' ||
+          (github.event.inputs.build_platforms == 'windows-only' && matrix.platform == 'windows') ||
+          (github.event.inputs.build_platforms == 'linux-only' && matrix.platform == 'linux') }}
     steps:
       - uses: actions/checkout@v4
 
@@ -88,9 +123,11 @@ jobs:
         run: go mod download
 
       - name: Run tests
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.skip_tests != 'true' }}
         run: go test -v ./...
 
       - name: Run go vet
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.skip_tests != 'true' }}
         run: go vet ./...
 
       - name: Build
@@ -108,7 +145,9 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    if: ${{ startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && github.event.inputs.run_release == 'true') }}
+    permissions:
+      contents: write
 
     steps:
       - name: Download artifacts
@@ -119,9 +158,25 @@ jobs:
       - name: List artifacts
         run: ls -R artifacts
 
-      - name: Create Release
+      - name: Create Release (tag push)
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
+          files: |
+            artifacts/rewamp-windows-amd64/rewamp-windows-amd64.exe
+            artifacts/rewamp-windows-386/rewamp-windows-386.exe
+            artifacts/rewamp-windows-arm64/rewamp-windows-arm64.exe
+            artifacts/rewamp-linux-amd64/rewamp-linux-amd64
+            artifacts/rewamp-linux-arm64/rewamp-linux-arm64
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release (manual dispatch)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_release == 'true' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.release_tag }}
           files: |
             artifacts/rewamp-windows-amd64/rewamp-windows-amd64.exe
             artifacts/rewamp-windows-386/rewamp-windows-386.exe
