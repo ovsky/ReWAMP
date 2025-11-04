@@ -1,17 +1,19 @@
 package main
 
 import (
-	"github.com/lxn/win"
-	"github.com/mitchellh/go-ps"
-	"github.com/sqweek/dialog"
-	"golang.org/x/sys/windows"
-	"golang.org/x/sys/windows/registry"
+	"fmt"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"sync"
 	"syscall"
+
+	"github.com/lxn/win"
+	"github.com/mitchellh/go-ps"
+	"github.com/sqweek/dialog"
+	"golang.org/x/sys/windows"
+	"golang.org/x/sys/windows/registry"
 )
 
 var (
@@ -21,10 +23,10 @@ var (
 	vDisk string
 	// Z:\
 	vDiskPath string
-	pwd, _ = os.Getwd()
+	pwd, _    = os.Getwd()
 
-	vDrivePath = `\vdrive`
-	registryKey = `SOFTWARE\romualdr\xwamp\CurrentVersion`
+	vDrivePath         = `\vdrive`
+	registryKey        = `SOFTWARE\romualdr\xwamp\CurrentVersion`
 	pathOperationMutex = sync.Mutex{}
 )
 
@@ -81,6 +83,17 @@ func vDiskExists(vDisk string) bool {
 
 func getVDriveDirectory() string {
 	return pwd + vDrivePath
+}
+
+func ensureVDriveBaseDir() error {
+	dir := getVDriveDirectory()
+	if exists(dir) {
+		return nil
+	}
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("unable to create vdrive directory %s: %w", dir, err)
+	}
+	return nil
 }
 
 func createDrive() {
@@ -155,7 +168,7 @@ func execute(path string, args string, cwd string, show bool) {
 }
 
 func _terminate(wg *sync.WaitGroup, pid int) error {
-	handle, err := windows.OpenProcess(windows.SYNCHRONIZE | windows.PROCESS_TERMINATE, false, uint32(pid))
+	handle, err := windows.OpenProcess(windows.SYNCHRONIZE|windows.PROCESS_TERMINATE, false, uint32(pid))
 	if err != nil {
 		fatal("Unable to open process " + strconv.Itoa(pid))
 		return err
@@ -239,7 +252,6 @@ func hasStringValue(name string) bool {
 	return err == nil && len(value) > 0
 }
 
-
 func hasIntegerValue(name string) bool {
 	regedit := getOrCreateRegistry(registryKey)
 	defer regedit.Close()
@@ -294,8 +306,10 @@ func removePath(toRemove string) {
 	defer pathOperationMutex.Unlock()
 	path := getPath()
 	index := strings.Index(path, toRemove)
-	if index == -1 { return }
-	path = strings.Replace(path, toRemove + ";", "", -1)
+	if index == -1 {
+		return
+	}
+	path = strings.Replace(path, toRemove+";", "", -1)
 	setPath(path)
 }
 

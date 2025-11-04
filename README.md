@@ -1,124 +1,137 @@
 
+# ![logo](./icon/icon_small.png) REWAMP
 
-# ![logo](./icon/icon_small.png) XWAMP
+> Modern Zero-install WAMP built with Go.
 
-  
+[![Build Status](https://github.com/ovsky/REWAMP/workflows/Build%20and%20Release/badge.svg)](https://github.com/ovsky/REWAMP/actions)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ovsky/REWAMP)](https://goreportcard.com/report/github.com/ovsky/REWAMP)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> Zero install WAMP built with Golang.
+The goal of REWAMP is to provide a simple executable to run web development tools with one click. It's packed with Apache / MySQL / PHP / MongoDB and administration tools pre-configured.
 
-[Download 0.1.0 now](https://github.com/romualdr/xwamp/releases/download/v0.1.0-alpha/xwamp-0.1.0-alpha.zip)
-
-  
-  
-
-The goal of XWAMP is to provide a simple executable to run web developments tools with one click. It's packed with Apache / MySQL / PHP / Mongo and administration tools pre-configured.
-
-  
-
-Heavily inspired by the now defunct ZWAMP.
-
-  
-  
+Heavily inspired by the now defunct ZWAMP and modernized for 2025.
 
 ![screenshot](./screenshot.png)
 
-  
+## Features
 
-## Getting started
+- ✅ **Zero Configuration**: Works out of the box
+- ✅ **System Tray Integration**: Convenient system tray menu
+- ✅ **Multiple Services**: Apache, MySQL, PHP, MongoDB, Memcached
+- ✅ **Quick Access**: Direct links to admin tools and documentation
+- ✅ **Virtual Drive**: Isolated environment using virtual drives
+- ✅ **Modern Go**: Built with Go 1.24+ and modern dependencies
 
-  
+## Getting Started
 
-Grab the latest release [here](https://github.com/romualdr/xwamp/releases), unzip and run the file `xwamp.exe`.
+### Download Pre-built Binary
 
+Download the latest release from the [Releases page](https://github.com/ovsky/REWAMP/releases).
 
-## How to Build XWAMP
-### Building from XWAMP base repository.
+### Building from Source
 
-> At first, we need to adapt the XWAMP to actual state of Golang language.
-The last XWAMP commit was made in 2019, so the project includes many outdated solutions and references. This instruction was written in the Q4 2022, references Golang 1.19, and will be updated. 
- 
-####  Fix outdated solutions:
-At first, replace every: `github.com/romualdr/systray` in project, by: `github.com/getlantern/systray`, to use the correct package path.
+#### Prerequisites
 
-In `main.go` you need to fix the reference of the local `icon` package, by replacing deprecated includement: `"./icon"` by the modern way `"xwamp/icon"`. The `xwamp` here is defined by the name of your module, you can find and change it in `go.mod` file. 
+- Go 1.24 or later
+- Windows (for the system tray functionality)
 
-Now, include the precompiled [2goarray](https://github.com/cratonica/2goarray) package binary in Golang default directory (`%gopath%/bin`). 
-The simplest way to do it is installation from source by command line:
-`go install github.com/cratonica/2goarray@latest`
+#### Build Steps
 
-If you run into any problems, you can clone the repository and compile it on your own and then copy the `2goarray.exe` binary to the directory metioned above.
- 
- #### Make package reference list:
-Now open the command line at project directory, and type:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ovsky/REWAMP.git
+   cd REWAMP
+   ```
 
-    go mod init xwamp
-    go mod tidy
-    
-First command will create  `go.mod` file (that defines the references for all required packages), the next one will find all the needed packages and put them into this list.
+2. Download dependencies:
+   ```bash
+   go mod download
+   ```
 
-If you want, you can upgrade dependencies to the latest packages, using standard: `go get -u all` command, or recursive way: `go get -u ./...`.  This will update the `go.mod` file and now it will include latest available versions of the packages. 
+3. Build the executable:
+   ```bash
+   go build -ldflags="-H windowsgui -s -w" -o rewamp.exe .
+   ```
 
-Now you can build the project using `build.bat` file, or by raw command: `go build -ldflags="-H windowsgui"`. It will pack the project into `xwamp.exe` binary. 
+   Or use the provided build script:
+   ```bash
+   build.bat
+   ```
 
- #### Installing packages:
-To install all required packages, you can simply invoke the global command: `go install` - that will install the packages defined in `go.mod` globally or in-repository command: `go get`, that will put these packages especially into your current project. 
+#### Development Setup
 
-If, by some reason, you want to install the packages that are necessary for XWAMP by yourself, you can type:
+1. Install Go 1.24 or later from [golang.org](https://golang.org/downloads/)
 
-    go get golang.org/x/sys/windows
-    go get github.com/lxn/win
-    go get github.com/mitchellh/go-ps
-    go get github.com/getlantern/systray
-    go get github.com/sqweek/dialog
-    
- 
+2. Clone and setup the project:
+   ```bash
+   git clone https://github.com/ovsky/REWAMP.git
+   cd REWAMP
+   go mod tidy
+   ```
 
-## Where do i put my code?
+3. Run in development mode:
+   ```bash
+   go run .
+   ```
 
-  
+## How It Works
 
-You can add your PHP files or your web application in the `vdrive\web` folder.
+REWAMP creates a virtual drive (usually Z:) that contains all the web development tools. This approach provides:
 
-  
+- **Isolation**: No interference with system-installed software
+- **Portability**: Entire stack is self-contained
+- **Clean Uninstall**: Simply delete the folder
 
-## Tools and versions
+## Where to Put Your Code
 
-  
+Add your PHP files or web applications to the `vdrive\web` folder.
 
-[Apache 2.4.41](http://httpd.apache.org/)
+## Included Tools and Versions
 
-  
+### Core Services
+- **Apache 2.4.41+** - Web Server
+- **MySQL 8.0.18+** - Relational Database (username: root / password: password)
+- **MongoDB 4.2.1+** - Document Database
+- **PHP 7.4.0+** - Server-side Scripting
+- **Memcached 1.5.20+** - Caching System
 
-[MySQL 8.0.18](https://www.mysql.com/fr/products/community/) (username: root / password: password)
-
-  
-
-[MongoDB 4.2.1](https://www.mongodb.com/what-is-mongodb)
-
-  
-
-[PHP 7.4.0](https://www.php.net/) with extensions:
-
-- [Pear 2](https://pear2.php.net/)
-
-- [APCu 5.1.18](https://pecl.php.net/package/APCu)
-
-- [GeoIP 1.1.1](https://pecl.php.net/package/geoip)
-
-- [YAML 2.0.1](https://pecl.php.net/package/yaml)
-
-- [MongoDB 1.6.1](https://pecl.php.net/package/mongodb)
-
+### PHP Extensions
+- Pear 2
+- APCu 5.1.18+
+- GeoIP 1.1.1+
+- YAML 2.0.1+
+- MongoDB 1.6.1+
 - curl, gd2, openssl, pdo_mysql, pdo_sqlite, sqlite3, tidy, xmlrpc, opcache, mbstring
 
-  
+### Admin Tools
+- **Adminer 4.7.5+** - Database Administration
+- **MemCache Admin** - Memcached Management
+- **APC Dashboard** - PHP Opcode Cache Statistics
 
-[Memcached 1.5.20](http://memcached.org/)
+## Dependencies
 
-  
+This project uses the following Go modules:
 
-[MemCache Admin by kn007](https://github.com/kn007/memcache.php)
+- [github.com/getlantern/systray](https://github.com/getlantern/systray) - System tray functionality
+- [github.com/lxn/win](https://github.com/lxn/win) - Windows API bindings
+- [github.com/mitchellh/go-ps](https://github.com/mitchellh/go-ps) - Process management
+- [github.com/sqweek/dialog](https://github.com/sqweek/dialog) - Native dialogs
+- [golang.org/x/sys](https://golang.org/x/sys) - System calls
 
-  
+## Contributing
 
-[Adminer 4.7.5](https://www.adminer.org/)
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Original XWAMP project by romualdr
+- ZWAMP project for inspiration
+- All contributors and users
