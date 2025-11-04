@@ -101,7 +101,7 @@ jobs:
           (github.event.inputs.build_platforms == 'windows-only' && matrix.platform == 'windows') ||
           (github.event.inputs.build_platforms == 'linux-only' && matrix.platform == 'linux') }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Go
         uses: actions/setup-go@v5
