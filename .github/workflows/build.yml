@@ -126,19 +126,51 @@ jobs:
       - name: Download dependencies
         run: go mod download
 
-      - name: Locate main package directory
-        id: find
+      - name: Locate main package directory (Linux/macOS)
+        if: runner.os != 'Windows'
+        id: find_nix
         shell: bash
         run: |
           set -euo pipefail
+          preferred="$GITHUB_WORKSPACE/cmd/rewamp"
+          if [ -d "$preferred" ]; then
+            echo "main_dir=$preferred" | tee -a "$GITHUB_OUTPUT"
+            exit 0
+          fi
           dirs=$(go list -f '{{if eq .Name "main"}}{{.Dir}}{{end}}' ./... | sed '/^$/d')
-          # Prefer cmd/rewamp if present
           main_dir=$(echo "$dirs" | grep -E '/cmd/rewamp$' || true)
           if [ -z "$main_dir" ]; then
             main_dir=$(echo "$dirs" | head -n1)
           fi
           echo "main_dir=$main_dir" | tee -a "$GITHUB_OUTPUT"
           echo "Main package dir: $main_dir"
+
+      - name: Locate main package directory (Windows)
+        if: runner.os == 'Windows'
+        id: find_win
+        shell: pwsh
+        run: |
+          $preferred = Join-Path $env:GITHUB_WORKSPACE 'cmd' 'rewamp'
+          if (Test-Path $preferred) { $dir = $preferred }
+          else {
+            $tpl = "{{if eq .Name \"main\"}}{{.Dir}}{{end}}"
+            $dirsText = & go list -f $tpl ./...
+            $dirs = $dirsText -split "`n" | Where-Object { $_ }
+            $dir = $dirs | Where-Object { $_ -match '\\cmd\\rewamp$' } | Select-Object -First 1
+            if (-not $dir) { $dir = $dirs | Select-Object -First 1 }
+          }
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "main_dir=$dir"
+          Write-Host "Main package dir: $dir"
+
+      - name: Export MAIN_DIR (nix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: echo "MAIN_DIR=${{ steps.find_nix.outputs.main_dir }}" >> "$GITHUB_ENV"
+
+      - name: Export MAIN_DIR (win)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: echo "MAIN_DIR=${{ steps.find_win.outputs.main_dir }}" >> $env:GITHUB_ENV
 
       - name: Run tests
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.skip_tests != 'true' }}
@@ -152,8 +184,7 @@ jobs:
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
-        working-directory: ${{ steps.find.outputs.main_dir }}
-        run: go build ${{ matrix.build-flags }} -o ${{ github.workspace }}/${{ matrix.binary }} .
+        run: go build -C "${{ env.MAIN_DIR }}" ${{ matrix.build-flags }} -o "${{ github.workspace }}/${{ matrix.binary }}" .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

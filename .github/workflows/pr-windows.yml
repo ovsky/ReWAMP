@@ -52,10 +52,18 @@ jobs:
         id: find
         shell: pwsh
         run: |
-          $dirs = go list -f '{{if eq .Name "main"}}{{.Dir}}{{end}}' ./... | Where-Object { $_ }
-          $dir = $dirs | Where-Object { $_ -match '\\cmd\\rewamp$' } | Select-Object -First 1
-          if (-not $dir) { $dir = $dirs | Select-Object -First 1 }
-          "main_dir=$dir" | Tee-Object -FilePath $env:GITHUB_OUTPUT -Append
+          $preferred = Join-Path $env:GITHUB_WORKSPACE 'cmd' 'rewamp'
+          if (Test-Path $preferred) {
+            $dir = $preferred
+          }
+          else {
+            $tpl = "{{if eq .Name \"main\"}}{{.Dir}}{{end}}"
+            $dirsText = & go list -f $tpl ./...
+            $dirs = $dirsText -split "`n" | Where-Object { $_ }
+            $dir = $dirs | Where-Object { $_ -match '\\cmd\\rewamp$' } | Select-Object -First 1
+            if (-not $dir) { $dir = $dirs | Select-Object -First 1 }
+          }
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "main_dir=$dir"
           Write-Host "Main package dir: $dir"
 
       - name: Run tests
@@ -68,10 +76,9 @@ jobs:
         env:
           GOOS: windows
           GOARCH: ${{ matrix.goarch }}
-        working-directory: ${{ steps.find.outputs.main_dir }}
         shell: pwsh
         run: |
-          go build -ldflags "-H windowsgui -s -w" -o "$env:GITHUB_WORKSPACE\\${{ matrix.binary }}" .
+          go build -C "${{ steps.find.outputs.main_dir }}" -ldflags "-H windowsgui -s -w" -o "$env:GITHUB_WORKSPACE\${{ matrix.binary }}" .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

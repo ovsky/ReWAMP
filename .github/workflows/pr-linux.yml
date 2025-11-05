@@ -78,10 +78,9 @@ jobs:
           CGO_ENABLED: 1
           GOOS: linux
           GOARCH: ${{ matrix.goarch }}
-        working-directory: ${{ steps.find.outputs.main_dir }}
         shell: bash
         run: |
-          go build -ldflags "-s -w" -o "$GITHUB_WORKSPACE/${{ matrix.binary }}" .
+          go build -C "${{ steps.find.outputs.main_dir }}" -ldflags "-s -w" -o "$GITHUB_WORKSPACE/${{ matrix.binary }}" .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
