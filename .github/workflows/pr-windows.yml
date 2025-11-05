@@ -48,6 +48,16 @@ jobs:
       - name: Download dependencies
         run: go mod download
 
+      - name: Locate main package directory
+        id: find
+        shell: pwsh
+        run: |
+          $dirs = go list -f '{{if eq .Name "main"}}{{.Dir}}{{end}}' ./... | Where-Object { $_ }
+          $dir = $dirs | Where-Object { $_ -match '\\cmd\\rewamp$' } | Select-Object -First 1
+          if (-not $dir) { $dir = $dirs | Select-Object -First 1 }
+          "main_dir=$dir" | Tee-Object -FilePath $env:GITHUB_OUTPUT -Append
+          Write-Host "Main package dir: $dir"
+
       - name: Run tests
         run: go test -v ./...
 
@@ -58,7 +68,7 @@ jobs:
         env:
           GOOS: windows
           GOARCH: ${{ matrix.goarch }}
-        working-directory: cmd/rewamp
+        working-directory: ${{ steps.find.outputs.main_dir }}
         shell: pwsh
         run: |
           go build -ldflags "-H windowsgui -s -w" -o "$env:GITHUB_WORKSPACE\\${{ matrix.binary }}" .

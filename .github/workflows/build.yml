@@ -126,6 +126,20 @@ jobs:
       - name: Download dependencies
         run: go mod download
 
+      - name: Locate main package directory
+        id: find
+        shell: bash
+        run: |
+          set -euo pipefail
+          dirs=$(go list -f '{{if eq .Name "main"}}{{.Dir}}{{end}}' ./... | sed '/^$/d')
+          # Prefer cmd/rewamp if present
+          main_dir=$(echo "$dirs" | grep -E '/cmd/rewamp$' || true)
+          if [ -z "$main_dir" ]; then
+            main_dir=$(echo "$dirs" | head -n1)
+          fi
+          echo "main_dir=$main_dir" | tee -a "$GITHUB_OUTPUT"
+          echo "Main package dir: $main_dir"
+
       - name: Run tests
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.skip_tests != 'true' }}
         run: go test -v ./...
@@ -138,8 +152,8 @@ jobs:
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
-        working-directory: cmd/rewamp
-        run: go build ${{ matrix.build-flags }} -o ../../${{ matrix.binary }} .
+        working-directory: ${{ steps.find.outputs.main_dir }}
+        run: go build ${{ matrix.build-flags }} -o ${{ github.workspace }}/${{ matrix.binary }} .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

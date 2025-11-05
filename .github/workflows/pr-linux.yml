@@ -53,6 +53,20 @@ jobs:
       - name: Download dependencies
         run: go mod download
 
+      - name: Locate main package directory
+        id: find
+        shell: bash
+        run: |
+          set -euo pipefail
+          dirs=$(go list -f '{{if eq .Name "main"}}{{.Dir}}{{end}}' ./... | sed '/^$/d')
+          # Prefer cmd/rewamp if present
+          main_dir=$(echo "$dirs" | grep -E '/cmd/rewamp$' || true)
+          if [ -z "$main_dir" ]; then
+            main_dir=$(echo "$dirs" | head -n1)
+          fi
+          echo "main_dir=$main_dir" | tee -a "$GITHUB_OUTPUT"
+          echo "Main package dir: $main_dir"
+
       - name: Run tests
         run: go test -v ./...
 
@@ -64,7 +78,7 @@ jobs:
           CGO_ENABLED: 1
           GOOS: linux
           GOARCH: ${{ matrix.goarch }}
-        working-directory: cmd/rewamp
+        working-directory: ${{ steps.find.outputs.main_dir }}
         shell: bash
         run: |
           go build -ldflags "-s -w" -o "$GITHUB_WORKSPACE/${{ matrix.binary }}" .
