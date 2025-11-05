@@ -81,7 +81,7 @@ jobs:
           go build -C "${{ steps.find.outputs.main_dir }}" -ldflags "-H windowsgui -s -w" -o "$env:GITHUB_WORKSPACE\${{ matrix.binary }}" .
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.artifact }}-pr-${{ github.event.number || github.run_number }}
           path: ${{ matrix.binary }}
