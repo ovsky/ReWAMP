@@ -101,7 +101,7 @@ jobs:
           (github.event.inputs.build_platforms == 'windows-only' && matrix.platform == 'windows') ||
           (github.event.inputs.build_platforms == 'linux-only' && matrix.platform == 'linux') }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -110,7 +110,7 @@ jobs:
           check-latest: true
 
       - name: Cache Go modules
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: ${{ matrix.cache-path }}
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
@@ -187,7 +187,7 @@ jobs:
         run: go build -C "${{ env.MAIN_DIR }}" ${{ matrix.build-flags }} -o "${{ github.workspace }}/${{ matrix.binary }}" .
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
           path: ${{ matrix.binary }}
@@ -201,7 +201,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 
