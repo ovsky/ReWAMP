@@ -3,7 +3,6 @@
 
 > Modern Cross-Platform Web Development Stack built with Go.
 
-[![Build Status](https://github.com/ovsky/ReWAMP/workflows/Build%20and%20Release/badge.svg)](https://github.com/ovsky/ReWAMP/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ovsky/ReWAMP)](https://goreportcard.com/report/github.com/ovsky/ReWAMP)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
